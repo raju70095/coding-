@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mega Programming & Tech Quiz</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .quiz-container {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 700px;
+            padding: 35px;
+            box-sizing: border-box;
+        }
+
+        .quiz-header {
+            margin-bottom: 25px;
+            text-align: center;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 15px;
+        }
+
+        .quiz-header h2 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            font-size: 22px;
+            line-height: 1.4;
+        }
+
+        .progress {
+            font-size: 14px;
+            color: #7f8c8d;
+            font-weight: bold;
+        }
+
+        .options {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .options li {
+            margin-bottom: 12px;
+        }
+
+        .btn {
+            background-color: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 14px 20px;
+            font-size: 16px;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .btn:hover:not(.disabled) {
+            background-color: #e2e6ea;
+            border-color: #dae0e5;
+        }
+
+        .btn.correct {
+            background-color: #2ecc71;
+            color: white;
+            border-color: #2ecc71;
+        }
+
+        .btn.wrong {
+            background-color: #e74c3c;
+            color: white;
+            border-color: #e74c3c;
+        }
+
+        .btn.disabled {
+            cursor: not-allowed;
+            opacity: 0.9;
+        }
+
+        #next-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: none;
+            margin-top: 25px;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+
+        #next-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .result-container {
+            text-align: center;
+            display: none;
+        }
+
+        .result-container h2 {
+            color: #2c3e50;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .result-container p {
+            font-size: 20px;
+            color: #34495e;
+            margin-bottom: 30px;
+        }
+
+        #reload-btn {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        #reload-btn:hover {
+            background-color: #27ae60;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container" id="quiz">
+    <div class="quiz-header">
+        <div class="progress" id="progress-text">Question 1 of 48</div>
+        <h2 id="question-text">Question will appear here</h2>
+    </div>
+    <ul class="options" id="options-container">
+        </ul>
+    <button id="next-btn">Next Question</button>
+</div>
+
+<div class="quiz-container result-container" id="result">
+    <h2>Quiz Completed! 🎉</h2>
+    <p>You scored <strong id="score">0</strong> out of <strong id="total-questions">0</strong>.</p>
+    <button id="reload-btn" onclick="location.reload()">Play Again</button>
+</div>
+
+<script>
+    // Saare 48 Questions yahan add kar diye gaye hain
+    const quizData = [
+        { question: "Question 1: What is the correct syntax of doctype in HTML5?", options: ["</Doctype Html>", "<? Doctype HTML>", "<!Doctype HTML>", "< Doctype HTML?>"], answer: "<!Doctype HTML>" },
+        { question: "Question 2: What is the correct syntax to increase the value of 5 in a C loop?", options: ["++variable", "5+variable", "variable+=5", "variable+++++"], answer: "variable+=5" },
+        { question: "Question 3: What are the types of unordered or bulleted list in HTML?", options: ["polygon, triangle, circle", "disc, circle, square", "disc, square, triangle", "All of the above"], answer: "disc, circle, square" },
+        { question: "Question 4: Which of the following functions is a built-in function in python?", options: ["factorial()", "print()", "seed()", "sqrt()"], answer: "print()" },
+        { question: "Question 5: Which is correct syntax for scanf?", options: ["scanf(\"%d\",variable);", "Scanf(\"%d\",variable);", "scanf(\"%d\",&variable);", "scanf(\"%d&\",variable);"], answer: "scanf(\"%d\",&variable);" },
+        { question: "Question 6: Which one is the valid real constant?", options: ["85.46", ".85", "85", "Both A and B"], answer: "Both A and B" },
+        { question: "Question 7: C++ code line ends with __.", options: ["Fullstop(.)", "Slash (/)", "Comma (,)", "Semicolon (;)"], answer: "Semicolon (;)" },
+        { question: "Question 8: How do you create a variable with the numeric value 5?", options: ["(5)=x", "x=5", "x=5int", "int = x = 5"], answer: "x=5" },
+        { question: "Question 9: @keyframes in CSS is used for?", options: ["Form", "Animation", "Transition", "Transform"], answer: "Animation" },
+        { question: "Question 10: The array index Number starts from.", options: ["1", "0", "-1", "From any Poisson"], answer: "0" },
+        { question: "Question 11: Which of the following is not a pair tag?", options: ["<p>", "<img>", "<u>", "<b>"], answer: "<img>" },
+        { question: "Question 12: ! (708 > 98 && 79 < 150 && 58 == 58 ) The Return value is?", options: ["0", "1", "Both", "none of these"], answer: "0" },
+        { question: "Question 13: The body of a function contains:", options: ["Return Statement.", "A variable declaration part.", "Processing part", "All of These"], answer: "All of These" },
+        { question: "Question 15: Which of the following property defines in a shorthand form the width, style, and color for the top border of an element?", options: ["border-style", "border-top", "border-height", "border-width"], answer: "border-top" },
+        { question: "Question 16: Which is not a reserved keyword in C programming?", options: ["Volatile & Extern", "Struct & Signed", "Register & Union", "Throw & Transient"], answer: "Throw & Transient" },
+        { question: "Question 17: The correct sequence of HTML tags for starting a webpage is -", options: ["Head, Title, HTML, body", "HTML, Body, Title, Head", "HTML, Head, Table, Body", "HTML, Head, Title, Body"], answer: "HTML, Head, Title, Body" },
+        { question: "Question 18: Which loop is an exit controller loop?", options: ["While", "For", "Do", "Do While"], answer: "Do While" },
+        { question: "Question 19: Which Symbol is used for Bitwise Not?", options: ["^ (caret)", "& (ampersand)", "| (vertical bar)", "~ (tilde)"], answer: "~ (tilde)" },
+        { question: "Question 20: Which of the following functions converts date to corresponding time in Python?", options: ["strptime()", "strftime()", "sttime()", "None of these"], answer: "strptime()" },
+        { question: "Question 22: The Extension of header file is in C language?", options: [".h", ".ht", ".cpp", ".exe"], answer: ".h" },
+        { question: "Question 23: Who is known as the father of C Language?", options: ["Dennis Ritchie", "Bjarne Stroustrup", "James A. Gosling", "Dr. E. F. Codd"], answer: "Dennis Ritchie" },
+        { question: "Question 24: Which tag is used for External CSS?", options: ["LINK", "STYLE", "CSS", "META"], answer: "LINK" },
+        { question: "Question 25: What is the work of break keyword?", options: ["Halt execution of program", "Exit from loop or switch statement", "Restart execution of program", "None of the above"], answer: "Exit from loop or switch statement" },
+        { question: "Question 26: How many number of pointer (*) does C have against a pointer variable declaration?", options: ["9", "255", "175", "No Limits"], answer: "No Limits" },
+        { question: "Question 27: Which of the following is suitable after you install new drivers?", options: ["Restart", "Shut Down", "Sleep", "Hibernate"], answer: "Restart" },
+        { question: "Question 28: Which is the correct variable for the data type string in C programming?", options: ["char vname;", "sting vname;", "char vname[55];", "string vname[55];"], answer: "char vname[55];" },
+        { question: "Question 29: Which tag is used to create a dropdown in HTML Form?", options: ["<input>", "<select>", "<text>", "<textarea>"], answer: "<select>" },
+        { question: "Question 30: What is the correct syntax to write an HTML comment?", options: ["", "# Comment", "/* Comment */", "// Comment"], answer: "" },
+        { question: "Question 31: How to insert a background image in HTML?", options: ["<body background=\"img.png\">", "<img background=\"img.png\">", "<bg-image=\"img.png\">", "None of the above"], answer: "<body background=\"img.png\">" },
+        { question: "Question 32: How do you change the font of an element?", options: ["font-family:", "font=", "font:style", "font-weight"], answer: "font-family:" },
+        { question: "Question 33: Add, Subtract, Multiple and logic operations are performed by?", options: ["Memory", "Logical Unit", "Control Unit", "ALU"], answer: "ALU" },
+        { question: "Question 34: When a = 6, c = ++a what will be the value of c?", options: ["6", "7", "5", "8"], answer: "7" },
+        { question: "Question 35: Which of the following is not a correct Data type in C?", options: ["float", "int", "char", "real"], answer: "real" },
+        { question: "Question 37: How do you make a list that lists its items with squares?", options: ["list-style-type: square", "list-type: square", "type: square", "type: 2"], answer: "list-style-type: square" },
+        { question: "Question 38: Who invented the punch card?", options: ["Joseph Marie Jacquard", "Herman Hollerith", "Charles Babbage", "Semen Korsakov"], answer: "Herman Hollerith" },
+        { question: "Question 39: AND (&&) and OR (||) are ___ operators", options: ["Equality", "Mode", "Terminate", "Logical"], answer: "Logical" },
+        { question: "Question 40: How do you make each word in a text start with a capital letter?", options: ["text-transform:capitalize", "You can't do that with CSS", "text-transform:uppercase", "none of these"], answer: "text-transform:capitalize" },
+        { question: "Question 41: Which HTML tag is used to define an internal style sheet?", options: ["<css>", "<style>", "<script>", "<html>"], answer: "<style>" },
+        { question: "Question 42: (int num[10]) What is the last index number for num variable?", options: ["num[0]", "num[10]", "num[9]", "num[1]"], answer: "num[9]" },
+        { question: "Question 43: Which is correct syntax for (for Loop)?", options: ["for(a=1;a++;a<=10)", "for(a++;a=1;a<10)", "for(a=1;a<10;a++)", "for(a=1,a<10,a++)"], answer: "for(a=1;a<10;a++)" },
+        { question: "Question 44: The statement printf(\"%c\", 100); will print?", options: ["prints 100", "print garbage", "prints ASCII equivalent of 100", "None of the above"], answer: "prints ASCII equivalent of 100" },
+        { question: "Question 45: STDLIB.h Header file stands for?", options: ["Standard Language", "Standard Large", "Standard Low", "Standard Library"], answer: "Standard Library" },
+        { question: "Question 46: Is Python case sensitive when dealing with identifiers?", options: ["Yes", "No", "Machine Dependent", "None of the mentioned"], answer: "Yes" },
+        { question: "Question 47: How to add a background color in HTML marquee?", options: ["<marquee bg color=\"red\">", "<marquee bg-color=\"red\">", "<marquee bgcolor=\"red\">", "<marquee color=\"red\">"], answer: "<marquee bgcolor=\"red\">" },
+        { question: "Question 48: In which language is Python written?", options: ["C++", "C", "JAVA", "HTML"], answer: "C" },
+        { question: "Question 49: What is right way to Initialize array?", options: ["int num[6] = { 2, 4, 12, 5, 45, 5 };", "int num[] = { 2, 4, 12, 5, 45, 5 };", "int num<6> = { 2, 4, 12, 5, 45, 5 };", "int num{6} = { 2, 4, 12, 5, 45, 5 };"], answer: "int num[6] = { 2, 4, 12, 5, 45, 5 };" },
+        { question: "Question 50: Built in Data type is also called as __ data type.", options: ["Secondary", "Fundamental", "Void", "Integer"], answer: "Fundamental" }
+    ];
+
+    const questionTextElement = document.getElementById('question-text');
+    const progressTextElement = document.getElementById('progress-text');
+    const optionsContainer = document.getElementById('options-container');
+    const nextButton = document.getElementById('next-btn');
+    const quizContainer = document.getElementById('quiz');
+    const resultContainer = document.getElementById('result');
+    const scoreElement = document.getElementById('score');
+    const totalQuestionsElement = document.getElementById('total-questions');
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+
+    function loadQuestion() {
+        resetState();
+        const currentQuestion = quizData[currentQuestionIndex];
+        questionTextElement.innerText = currentQuestion.question;
+        progressTextElement.innerText = `Question ${currentQuestionIndex + 1} of ${quizData.length}`;
+
+        currentQuestion.options.forEach(option => {
+            const button = document.createElement('button');
+            button.innerText = option;
+            button.classList.add('btn');
+            button.addEventListener('click', () => selectAnswer(button, currentQuestion.answer));
+            
+            const li = document.createElement('li');
+            li.appendChild(button);
+            optionsContainer.appendChild(li);
+        });
+    }
+
+    function resetState() {
+        nextButton.style.display = 'none';
+        while (optionsContainer.firstChild) {
+            optionsContainer.removeChild(optionsContainer.firstChild);
+        }
+    }
+
+    function selectAnswer(selectedButton, correctAnswer) {
+        const isCorrect = selectedButton.innerText === correctAnswer;
+        
+        if (isCorrect) {
+            selectedButton.classList.add('correct');
+            score++;
+        } else {
+            selectedButton.classList.add('wrong');
+            // Auto-highlight the correct answer
+            Array.from(optionsContainer.querySelectorAll('.btn')).forEach(button => {
+                if (button.innerText === correctAnswer) {
+                    button.classList.add('correct');
+                }
+            });
+        }
+
+        // Disable options after selection
+        Array.from(optionsContainer.querySelectorAll('.btn')).forEach(button => {
+            button.classList.add('disabled');
+            button.disabled = true;
+        });
+
+        nextButton.style.display = 'block';
+    }
+
+    nextButton.addEventListener('click', () => {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < quizData.length) {
+            loadQuestion();
+        } else {
+            showResult();
+        }
+    });
+
+    function showResult() {
+        quizContainer.style.display = 'none';
+        resultContainer.style.display = 'block';
+        scoreElement.innerText = score;
+        totalQuestionsElement.innerText = quizData.length;
+    }
+
+    // Start Mega Quiz
+    loadQuestion();
+</script>
+
+</body>
+</html>
